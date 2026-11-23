@@ -1,8 +1,12 @@
 # Magic Mirror
 
-Configuratie voor de ALA Magic Mirror met Raspberry Pi 3. De basis toont de klok en het weer in Gouda. Er zijn ook opties voor Google Agenda, bus Blommesteinsingel en treinen vanaf station Gouda.
+Configuratie voor de ALA Magic Mirror met Raspberry Pi 3 en een verticale monitor van 300 mm breed x 530 mm hoog. De indeling loopt van boven naar beneden: klok, weer, verwachting, agenda en openbaar vervoer.
 
-## Installeren op de Pi
+## Monitor rechtop zetten
+
+Stel op de Raspberry Pi bij de scherminstellingen de weergave in op **Portrait/Staand**. De configuratie ordent de onderdelen van boven naar beneden; de schermrotatie zelf stel je in bij de Pi.
+
+## Installeren of bijwerken op de Pi
 
 Open de terminal op de Pi en plak deze ene regel:
 
@@ -10,7 +14,7 @@ Open de terminal op de Pi en plak deze ene regel:
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main/install-on-pi.sh)"
 ```
 
-Dit maakt eerst een reservekopie van je bestaande configuratie, haalt de nieuwste `config.js` op, installeert de bus- en treinmodules en start MagicMirror. MagicMirror moet al geïnstalleerd zijn in `~/MagicMirror`.
+Dit maakt eerst een reservekopie van je bestaande configuratie, haalt de nieuwste `config.js` op, installeert de bus- en treinmodules en start MagicMirror. MagicMirror moet al geïnstalleerd zijn in `~/MagicMirror`. Als MagicMirror al draait, stop het eerst met Ctrl+C.
 
 ## Nog invullen voor bus, trein en agenda
 
