@@ -1,6 +1,6 @@
 /*
  * Magic Mirror voor de ALA
- * Basis: klok/datum en weer voor Gouda.
+ * Staande indeling voor een monitor van 300 mm breed x 530 mm hoog.
  * Vul geheime waarden alleen lokaal in op de Pi.
  */
 const GOOGLE_CALENDAR_ICAL_URL = "VUL_HIER_DE_SECRET_ICAL_LINK_IN";
@@ -10,12 +10,12 @@ const NS_API_KEY = "VUL_HIER_DE_NS_API_SLEUTEL_IN";
 const modules = [
 	{
 		module: "clock",
-		position: "top_left",
+		position: "top_bar",
 		config: { timezone: "Europe/Amsterdam", timeFormat: 24 }
 	},
 	{
 		module: "weather",
-		position: "top_right",
+		position: "upper_third",
 		header: "Weer in Gouda",
 		config: {
 			weatherProvider: "openmeteo",
@@ -29,14 +29,14 @@ const modules = [
 	},
 	{
 		module: "weather",
-		position: "bottom_right",
+		position: "middle_center",
 		header: "Verwachting",
 		config: {
 			weatherProvider: "openmeteo",
 			type: "forecast",
 			lat: 52.0116,
 			lon: 4.7105,
-			maxNumberOfDays: 3
+			maxNumberOfDays: 2
 		}
 	}
 ];
@@ -44,9 +44,10 @@ const modules = [
 if (GOOGLE_CALENDAR_ICAL_URL.startsWith("https://")) {
 	modules.push({
 		module: "calendar",
-		position: "top_left",
+		position: "lower_third",
+		header: "Agenda",
 		config: {
-			maximumEntries: 5,
+			maximumEntries: 3,
 			showTimeToday: true,
 			calendars: [{ symbol: "calendar-check", url: GOOGLE_CALENDAR_ICAL_URL }]
 		}
@@ -56,12 +57,12 @@ if (GOOGLE_CALENDAR_ICAL_URL.startsWith("https://")) {
 if (!BUS_STOP_AREA_CODE.startsWith("VUL")) {
 	modules.push({
 		module: "MMM-bustimes",
-		position: "bottom_left",
+		position: "bottom_bar",
 		header: "Bus Blommesteinsingel",
 		config: {
 			stopAreaCode: BUS_STOP_AREA_CODE,
 			displaymode: "medium",
-			departures: 3,
+			departures: 2,
 			showTownName: true
 		}
 	});
@@ -70,12 +71,12 @@ if (!BUS_STOP_AREA_CODE.startsWith("VUL")) {
 if (!NS_API_KEY.startsWith("VUL")) {
 	modules.push({
 		module: "nstreinen",
-		position: "bottom_center",
+		position: "bottom_bar",
 		header: "Treinen vanaf Gouda",
 		config: {
 			apiKey: NS_API_KEY,
 			fromStation: "GD",
-			maxEntries: 4,
+			maxEntries: 3,
 			reloadInterval: 300000
 		}
 	});
