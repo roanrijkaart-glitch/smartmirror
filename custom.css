@@ -1,4 +1,4 @@
-/* Indeling volgens de schets: weer/agenda boven, klok midden, vervoer onder. */
+/* Indeling volgens de schets: weer/agenda boven, tijd met datum eronder, vervoer onder. */
 :root {
   --font-size: 18px;
   --font-size-small: 0.85rem;
@@ -27,6 +27,12 @@
   text-align: center;
 }
 
+.region.middle.center .module.clock .time,
+.region.middle.center .module.clock .date {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
 .region.middle.center .module.clock .time {
   font-size: clamp(64px, 12vw, 144px);
   line-height: 1;
@@ -35,13 +41,6 @@
 .region.middle.center .module.clock .date {
   font-size: clamp(20px, 3.2vw, 34px);
   margin-top: 12px;
-}
-
-.region.lower.third .module.compliments {
-  width: 88vw;
-  margin: 0 auto;
-  text-align: center;
-  font-size: clamp(18px, 2.7vw, 30px);
 }
 
 .region.bottom.left .module.MMM-bustimes,
@@ -70,4 +69,3 @@
 .region.bottom.right .module.MMM-nsdepartures .ns-time {
   white-space: nowrap;
 }
-
