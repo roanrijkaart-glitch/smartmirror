@@ -1,0 +1,24 @@
+.nsdepartures {
+	width: 100%;
+}
+
+.nsdepartures table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.nsdepartures th,
+.nsdepartures td {
+	padding: 2px 8px;
+	text-align: left;
+}
+
+.nsdepartures th {
+	font-weight: 700;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.nsdepartures .ns-time {
+	white-space: nowrap;
+}
+
