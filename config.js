@@ -2,9 +2,9 @@
  * Smart Mirror ALA, staand scherm 300 x 530 mm.
  * De installer vraagt de agenda-link en NS-sleutel lokaal op de Pi.
  */
-const GOOGLE_CALENDAR_ICAL_URL = "https://calendar.google.com/calendar/ical/klaas90389%40gmail.com/public/basic.ics";
+const GOOGLE_CALENDAR_ICAL_URL = "VUL_HIER_DE_AGENDA_ICAL_LINK_IN";
 const BUS_STOP_AREA_CODE = "GdMam";
-const NS_API_KEY = "d00747c167dd4ea8812d5e0ce20d133e";
+const NS_API_KEY = "VUL_HIER_DE_NS_API_SLEUTEL_IN";
 
 const modules = [
 	{
@@ -16,7 +16,7 @@ const modules = [
 			displaySeconds: false,
 			showDate: true,
 			dateFormat: "dddd D MMMM",
-			clockBold: true
+			clockBold: false
 		}
 	},
 	{
@@ -47,21 +47,6 @@ if (GOOGLE_CALENDAR_ICAL_URL.startsWith("https://")) {
 		}
 	});
 }
-
-modules.push({
-	module: "compliments",
-	position: "lower_third",
-	config: {
-		updateInterval: 60000,
-		fadeSpeed: 0,
-		compliments: {
-			anytime: [],
-			morning: ["Kan ik vandaag een korte broek aan?"],
-			afternoon: ["Kan ik vandaag een korte broek aan?"],
-			evening: ["Kan ik vandaag een korte broek aan?"]
-		}
-	}
-});
 
 modules.push({
 	module: "MMM-bustimes",
@@ -103,4 +88,3 @@ const config = {
 };
 
 if (typeof module !== "undefined") module.exports = config;
-
