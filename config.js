@@ -4,7 +4,7 @@
  * Vul geheime waarden alleen lokaal in op de Pi.
  */
 const GOOGLE_CALENDAR_ICAL_URL = "VUL_HIER_DE_SECRET_ICAL_LINK_IN";
-const BUS_STOP_AREA_CODE = "VUL_HIER_DE_STOPAREA_CODE_VAN_BLOMMESTEINSINGEL_IN";
+const BUS_TIMING_POINT_CODE = "53514170";
 const NS_API_KEY = "VUL_HIER_DE_NS_API_SLEUTEL_IN";
 
 const modules = [
@@ -54,13 +54,13 @@ if (GOOGLE_CALENDAR_ICAL_URL.startsWith("https://")) {
 	});
 }
 
-if (!BUS_STOP_AREA_CODE.startsWith("VUL")) {
+if (BUS_TIMING_POINT_CODE !== "") {
 	modules.push({
 		module: "MMM-bustimes",
 		position: "bottom_bar",
 		header: "Bus Blommesteinsingel",
 		config: {
-			stopAreaCode: BUS_STOP_AREA_CODE,
+			timingPointCode: BUS_TIMING_POINT_CODE,
 			displaymode: "medium",
 			departures: 2,
 			showTownName: true
