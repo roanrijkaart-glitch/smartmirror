@@ -2,14 +2,20 @@
 set -euo pipefail
 
 REPO_RAW="https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main"
+SOURCE_DIR="$(mktemp -d)"
+trap 'rm -rf "$SOURCE_DIR"' EXIT
+mkdir -p "$SOURCE_DIR/modules/MMM-nsdepartures"
+for FILE in config.js custom.css modules/MMM-nsdepartures/MMM-nsdepartures.js modules/MMM-nsdepartures/node_helper.js modules/MMM-nsdepartures/MMM-nsdepartures.css; do
+  curl -fsSL "${REPO_RAW}/${FILE}" -o "${SOURCE_DIR}/${FILE}"
+done
 MIRROR_DIR="$HOME/MagicMirror"
 NODE_VERSION="v22.23.5"
 NODE_ROOT="/opt/node-${NODE_VERSION}"
 
 echo "Smart Mirror installeren op deze Raspberry Pi."
-read -r -s -p "Google Agenda iCal-link (Enter = later invullen): " CALENDAR_URL
+read -r -p "Google Agenda iCal-link (Enter = later invullen): " CALENDAR_URL
 printf '\n'
-read -r -s -p "NS API-sleutel (Enter = later invullen): " NS_API_KEY
+read -r -p "NS API-sleutel (Enter = later invullen): " NS_API_KEY
 printf '\n'
 
 if ! command -v git >/dev/null || ! command -v curl >/dev/null || ! command -v xz >/dev/null; then
@@ -60,9 +66,7 @@ fi
 
 NS_MODULE_DIR="${MIRROR_DIR}/modules/MMM-nsdepartures"
 mkdir -p "${NS_MODULE_DIR}"
-for FILE in MMM-nsdepartures.js node_helper.js MMM-nsdepartures.css; do
-	curl -fsSL "${REPO_RAW}/modules/MMM-nsdepartures/${FILE}" -o "${NS_MODULE_DIR}/${FILE}"
-done
+cp "${SOURCE_DIR}/modules/MMM-nsdepartures/"* "${NS_MODULE_DIR}/"
 
 mkdir -p "${MIRROR_DIR}/config"
 if [[ -f "${MIRROR_DIR}/config/config.js" ]]; then
@@ -70,8 +74,8 @@ if [[ -f "${MIRROR_DIR}/config/config.js" ]]; then
 	cp "${MIRROR_DIR}/config/config.js" "${BACKUP}"
 	printf 'Reservekopie gemaakt: %s\n' "${BACKUP}"
 fi
-curl -fsSL "${REPO_RAW}/config.js" -o "${MIRROR_DIR}/config/config.js"
-curl -fsSL "${REPO_RAW}/custom.css" -o "${MIRROR_DIR}/config/custom.css"
+cp "${SOURCE_DIR}/config.js" "${MIRROR_DIR}/config/config.js"
+cp "${SOURCE_DIR}/custom.css" "${MIRROR_DIR}/config/custom.css"
 
 CALENDAR_URL="${CALENDAR_URL}" NS_API_KEY="${NS_API_KEY}" node - "${MIRROR_DIR}/config/config.js" <<'NODE'
 const fs = require("node:fs");
