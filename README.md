@@ -2,11 +2,7 @@
 
 Configuratie voor de ALA Magic Mirror met Raspberry Pi 3 en een verticale monitor van 300 mm breed x 530 mm hoog. De indeling loopt van boven naar beneden: klok, weer, verwachting, agenda en openbaar vervoer.
 
-## Monitor rechtop zetten
-
-Stel op de Raspberry Pi bij de scherminstellingen de weergave in op **Portrait/Staand**. De configuratie ordent de onderdelen van boven naar beneden; de schermrotatie zelf stel je in bij de Pi.
-
-## Installeren of bijwerken op de Pi
+## Installeren op de Pi
 
 Open de terminal op de Pi en plak deze ene regel:
 
@@ -16,15 +12,21 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/roanrijkaart-glitch/smar
 
 Dit maakt eerst een reservekopie van je bestaande configuratie, haalt de nieuwste `config.js` op, installeert de bus- en treinmodules en start MagicMirror. MagicMirror moet al geïnstalleerd zijn in `~/MagicMirror`. Als MagicMirror al draait, stop het eerst met Ctrl+C.
 
-## Nog invullen voor bus, trein en agenda
+## Bus bij mboRijnland
 
-De klok en het weer werken na de installatie. Om de andere onderdelen te activeren, moet je op de Pi lokaal de waarden bovenaan `~/MagicMirror/config/config.js` invullen:
+Voor bushalte Gouda, Blommesteinsingel is de OVapi TimingPointCode `53514170`. Die staat ingevuld in `config.js`. De code is gecontroleerd in de actuele OVapi-gegevens voor lijn 1 van Qbuzz.
 
-- Treinen: vraag een NS API-sleutel aan via [NS API Portal](https://apiportal.ns.nl/). Station Gouda gebruikt code `GD`.
-- Bus: vul de OVapi StopAreaCode in van halte Gouda, Blommesteinsingel bij mboRijnland. De juiste code moet nog worden opgezocht.
-- Google Agenda: vul je geheime iCal-link in.
+## Treinen vanaf Gouda
 
-Zet je NS-sleutel en geheime agenda-link nooit op GitHub. In deze repository staan alleen invulplekken, geen persoonlijke gegevens.
+De configuratie gebruikt stationcode `GD` voor Gouda. Voor vertrektijden is een persoonlijke NS API-sleutel nodig. Meld je aan op het [NS API-portaal](https://apiportal.ns.nl/), kies het product dat de Reisinformatie API met vertrektijden aanbiedt en vraag daar toegang aan. Na goedkeuring vind je je persoonlijke subscription key op je profiel. Vul die lokaal op de Pi in bij `NS_API_KEY`; zet de sleutel niet in GitHub. De toegang wordt via het NS-portaal aangevraagd en kan goedkeuring vereisen.
+
+## Google Agenda
+
+Vul de geheime iCal-link lokaal in bij `GOOGLE_CALENDAR_ICAL_URL`. Deel die link niet en zet hem niet in GitHub.
+
+## Monitor staand zetten
+
+Stel op de Raspberry Pi bij de scherminstellingen de weergave in op **Portrait/Staand**. De configuratie ordent de onderdelen van boven naar beneden; de schermrotatie zelf stel je in bij de Pi.
 
 ## Extra uitbreidingen
 
