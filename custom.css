@@ -1,0 +1,73 @@
+/* Indeling volgens de schets: weer/agenda boven, klok midden, vervoer onder. */
+:root {
+  --font-size: 18px;
+  --font-size-small: 0.85rem;
+  --font-size-medium: 1.2rem;
+  --font-size-large: 3rem;
+  --gap-body-top: 24px;
+  --gap-body-right: 22px;
+  --gap-body-bottom: 22px;
+  --gap-body-left: 22px;
+  --gap-modules: 10px;
+}
+
+.region.top.left .module.weather {
+  width: min(280px, 40vw);
+  text-align: center;
+}
+
+.region.top.right .module.calendar {
+  width: min(310px, 42vw);
+  margin-left: auto;
+  text-align: left;
+}
+
+.region.middle.center .module.clock {
+  width: 88vw;
+  text-align: center;
+}
+
+.region.middle.center .module.clock .time {
+  font-size: clamp(64px, 12vw, 144px);
+  line-height: 1;
+}
+
+.region.middle.center .module.clock .date {
+  font-size: clamp(20px, 3.2vw, 34px);
+  margin-top: 12px;
+}
+
+.region.lower.third .module.compliments {
+  width: 88vw;
+  margin: 0 auto;
+  text-align: center;
+  font-size: clamp(18px, 2.7vw, 30px);
+}
+
+.region.bottom.left .module.MMM-bustimes,
+.region.bottom.right .module.MMM-nsdepartures {
+  width: 45vw;
+  max-width: 360px;
+  text-align: left;
+}
+
+.region.bottom.left .module.MMM-bustimes table,
+.region.bottom.right .module.MMM-nsdepartures table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(12px, 1.7vw, 16px);
+}
+
+.region.bottom.left .module.MMM-bustimes th,
+.region.bottom.left .module.MMM-bustimes td,
+.region.bottom.right .module.MMM-nsdepartures th,
+.region.bottom.right .module.MMM-nsdepartures td {
+  padding: 2px 4px;
+  text-align: left;
+}
+
+.region.bottom.left .module.MMM-bustimes .time,
+.region.bottom.right .module.MMM-nsdepartures .ns-time {
+  white-space: nowrap;
+}
+
