@@ -1,23 +1,25 @@
 # Smart Mirror
 
-MagicMirror voor onze ALA met Raspberry Pi 3 en staand scherm van 300 x 530 mm.
+MagicMirror voor onze ALA met Raspberry Pi 3 en verticaal scherm van 300 x 530 mm.
 
 ## Installeren op de Pi
 
-De repository is privé. Daarom geeft de oude downloadregel een 404 op de Pi. Je moet de installatiebestanden eerst op de Pi zetten of de repository tijdelijk openbaar maken. De veilige optie is: download de map `magicmirror-pi3` als ZIP via deze computer en zet die bestanden met een USB-stick op de Pi.
-
-Zet daarna de map `github-release` op de Pi en open de Terminal in die map. Voer uit:
+Zet deze GitHub-repository op **Public**. Open daarna Terminal op de Pi en plak deze regel:
 
 ```bash
-chmod +x install-on-pi.sh
-./install-on-pi.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main/install-on-pi.sh)"
 ```
 
-De installer haalt MagicMirror en Node.js op, plaatst de configuratie en start de spiegel. Hiervoor heeft de Pi internet nodig. Als het script om agenda-link en NS API-sleutel vraagt, voer die dan rechtstreeks op de Pi in. Deel die waarden niet in een openbare GitHub-repository.
+De installer zet Node.js, MagicMirror, de bus- en treinmodule en de indeling klaar. Typ de agenda-link en NS API-sleutel wanneer daarom wordt gevraagd; de invoer is zichtbaar. Die gegevens worden lokaal op de Pi opgeslagen en staan niet in deze repository.
 
-## Onderdelen
+## Bijwerken
 
-- Temperatuur in Gouda
-- Agenda via een iCal-feed
-- Bussen vanaf halte Mammoet
-- Treinen vanaf station Gouda
+Plak op de Pi:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main/update-on-pi.sh)"
+```
+
+De updater haalt de nieuwste bestanden op, maakt een reservekopie en start MagicMirror opnieuw. Laat de agenda-link en API-sleutel leeg om de huidige waarden op de Pi te behouden.
+
+De tijd staat boven de datum in het midden, met één lettertype. De vraag over de korte broek is verwijderd.
