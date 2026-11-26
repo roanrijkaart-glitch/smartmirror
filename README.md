@@ -1,25 +1,23 @@
 # Smart Mirror
 
-MagicMirror voor onze ALA met Raspberry Pi 3 en staand scherm van 300 x 530 mm. De indeling volgt onze schets: temperatuur en agenda bovenaan, klok en datum midden, vraag eronder en bus- en treintijden onderaan.
+MagicMirror voor onze ALA met Raspberry Pi 3 en staand scherm van 300 x 530 mm.
 
 ## Installeren op de Pi
 
-Open de Terminal op de Pi en plak deze ene regel:
+De repository is privé. Daarom geeft de oude downloadregel een 404 op de Pi. Je moet de installatiebestanden eerst op de Pi zetten of de repository tijdelijk openbaar maken. De veilige optie is: download de map `magicmirror-pi3` als ZIP via deze computer en zet die bestanden met een USB-stick op de Pi.
+
+Zet daarna de map `github-release` op de Pi en open de Terminal in die map. Voer uit:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main/install-on-pi.sh)"
+chmod +x install-on-pi.sh
+./install-on-pi.sh
 ```
 
-De installer zet Node.js, MagicMirror, de bus- en treinmodule en onze configuratie klaar. Daarna vraagt hij lokaal om de iCal-link en NS API-sleutel. Invoer van die twee waarden blijft verborgen en wordt alleen op de Pi opgeslagen. Leeg laten kan ook; dan kun je ze later lokaal invullen.
-
-De eerste installatie kan op een Pi 3 ongeveer tien minuten duren. Laat de Pi aan en sluit de Terminal niet af totdat MagicMirror start.
+De installer haalt MagicMirror en Node.js op, plaatst de configuratie en start de spiegel. Hiervoor heeft de Pi internet nodig. Als het script om agenda-link en NS API-sleutel vraagt, voer die dan rechtstreeks op de Pi in. Deel die waarden niet in een openbare GitHub-repository.
 
 ## Onderdelen
 
-- Temperatuur in Gouda via Open-Meteo.
-- Agenda via een iCal-feed.
-- Bussen vanaf halte Mammoet.
-- Treinen vanaf station Gouda.
-
-Geheime agenda-links en API-sleutels staan niet in deze GitHub-repository.
-
+- Temperatuur in Gouda
+- Agenda via een iCal-feed
+- Bussen vanaf halte Mammoet
+- Treinen vanaf station Gouda
