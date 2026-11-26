@@ -14,11 +14,11 @@ Dit maakt eerst een reservekopie van je bestaande configuratie, haalt de nieuwst
 
 ## Bus bij mboRijnland
 
-Voor bushalte Gouda, Blommesteinsingel is de OVapi TimingPointCode `53514170`. Die staat ingevuld in `config.js`. De code is gecontroleerd in de actuele OVapi-gegevens voor lijn 1 van Qbuzz.
+Voor bushalte Gouda, Blommesteinsingel is de OVapi TimingPointCode `53514170`. Die staat ingevuld in `config.js`. De code is gecontroleerd in de actuele OVapi-gegevens voor Qbuzz-lijn 1.
 
 ## Treinen vanaf Gouda
 
-De configuratie gebruikt stationcode `GD` voor Gouda. Voor vertrektijden is een persoonlijke NS API-sleutel nodig. Meld je aan op het [NS API-portaal](https://apiportal.ns.nl/), kies het product dat de Reisinformatie API met vertrektijden aanbiedt en vraag daar toegang aan. Na goedkeuring vind je je persoonlijke subscription key op je profiel. Vul die lokaal op de Pi in bij `NS_API_KEY`; zet de sleutel niet in GitHub. De toegang wordt via het NS-portaal aangevraagd en kan goedkeuring vereisen.
+De NS-stationscode voor Gouda is `Gd`. Voor vertrektijden is een persoonlijke NS API-sleutel nodig. Meld je aan op het [NS API-portaal](https://apiportal.ns.nl/), zoek de API voor vertrektijden/reisinformatie en open het bijbehorende product. Vraag via dat product een subscription aan. Na eventuele goedkeuring vind je je persoonlijke key op je profiel. Vul die lokaal op de Pi in bij `NS_API_KEY`; zet de sleutel niet in GitHub.
 
 ## Google Agenda
 
