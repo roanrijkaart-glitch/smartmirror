@@ -22,6 +22,11 @@
   text-align: left;
 }
 
+.region.middle.center {
+  top: 40%;
+  bottom: auto;
+}
+
 .region.middle.center .module.clock {
   width: 88vw;
   text-align: center;
