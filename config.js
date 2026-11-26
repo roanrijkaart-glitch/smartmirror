@@ -1,42 +1,36 @@
 /*
- * Magic Mirror voor de ALA
- * Staande indeling voor een monitor van 300 mm breed x 530 mm hoog.
- * Vul geheime waarden alleen lokaal in op de Pi.
+ * Smart Mirror ALA, staand scherm 300 x 530 mm.
+ * De installer vraagt de agenda-link en NS-sleutel lokaal op de Pi.
  */
-const GOOGLE_CALENDAR_ICAL_URL = "VUL_HIER_DE_SECRET_ICAL_LINK_IN";
-const BUS_TIMING_POINT_CODE = "53514170";
+const GOOGLE_CALENDAR_ICAL_URL = "VUL_HIER_DE_AGENDA_ICAL_LINK_IN";
+const BUS_STOP_AREA_CODE = "GdMam";
 const NS_API_KEY = "VUL_HIER_DE_NS_API_SLEUTEL_IN";
 
 const modules = [
 	{
 		module: "clock",
-		position: "top_bar",
-		config: { timezone: "Europe/Amsterdam", timeFormat: 24 }
+		position: "middle_center",
+		config: {
+			timezone: "Europe/Amsterdam",
+			timeFormat: 24,
+			displaySeconds: false,
+			showDate: true,
+			dateFormat: "dddd D MMMM",
+			clockBold: true
+		}
 	},
 	{
 		module: "weather",
-		position: "upper_third",
-		header: "Weer in Gouda",
+		position: "top_left",
+		header: "Temperatuur Gouda",
 		config: {
 			weatherProvider: "openmeteo",
 			type: "current",
 			lat: 52.0116,
 			lon: 4.7105,
-			showFeelsLike: true,
-			showHumidity: true,
-			showWind: true
-		}
-	},
-	{
-		module: "weather",
-		position: "middle_center",
-		header: "Verwachting",
-		config: {
-			weatherProvider: "openmeteo",
-			type: "forecast",
-			lat: 52.0116,
-			lon: 4.7105,
-			maxNumberOfDays: 2
+			roundTemp: true,
+			onlyTemp: true,
+			updateInterval: 600000
 		}
 	}
 ];
@@ -44,40 +38,54 @@ const modules = [
 if (GOOGLE_CALENDAR_ICAL_URL.startsWith("https://")) {
 	modules.push({
 		module: "calendar",
-		position: "lower_third",
+		position: "top_right",
 		header: "Agenda",
 		config: {
-			maximumEntries: 3,
+			maximumEntries: 4,
 			showTimeToday: true,
 			calendars: [{ symbol: "calendar-check", url: GOOGLE_CALENDAR_ICAL_URL }]
 		}
 	});
 }
 
-if (BUS_TIMING_POINT_CODE !== "") {
-	modules.push({
-		module: "MMM-bustimes",
-		position: "bottom_bar",
-		header: "Bus Blommesteinsingel",
-		config: {
-			timingPointCode: BUS_TIMING_POINT_CODE,
-			displaymode: "medium",
-			departures: 2,
-			showTownName: true
+modules.push({
+	module: "compliments",
+	position: "lower_third",
+	config: {
+		updateInterval: 60000,
+		fadeSpeed: 0,
+		compliments: {
+			anytime: [],
+			morning: ["Kan ik vandaag een korte broek aan?"],
+			afternoon: ["Kan ik vandaag een korte broek aan?"],
+			evening: ["Kan ik vandaag een korte broek aan?"]
 		}
-	});
-}
+	}
+});
+
+modules.push({
+	module: "MMM-bustimes",
+	position: "bottom_left",
+	header: "Bus halte Mammoet",
+	config: {
+		stopAreaCode: BUS_STOP_AREA_CODE,
+		displaymode: "large",
+		showHeader: true,
+		departures: 5,
+		showTownName: true
+	}
+});
 
 if (!NS_API_KEY.startsWith("VUL")) {
 	modules.push({
-		module: "nstreinen",
-		position: "bottom_bar",
+		module: "MMM-nsdepartures",
+		position: "bottom_right",
 		header: "Treinen vanaf Gouda",
 		config: {
 			apiKey: NS_API_KEY,
-			fromStation: "Gd",
+			station: "Gd",
 			maxEntries: 3,
-			reloadInterval: 300000
+			updateInterval: 60000
 		}
 	});
 }
@@ -95,3 +103,4 @@ const config = {
 };
 
 if (typeof module !== "undefined") module.exports = config;
+
