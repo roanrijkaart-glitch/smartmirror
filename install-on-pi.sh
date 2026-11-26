@@ -1,37 +1,90 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
+REPO_RAW="https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main"
 MIRROR_DIR="$HOME/MagicMirror"
-MODULES_DIR="$MIRROR_DIR/modules"
-CONFIG_URL="https://raw.githubusercontent.com/roanrijkaart-glitch/smartmirror/main/config.js"
+NODE_VERSION="v22.23.5"
+NODE_ROOT="/opt/node-${NODE_VERSION}"
 
-if [ ! -d "$MIRROR_DIR" ]; then
-  echo "MagicMirror staat niet in $MIRROR_DIR. Installeer MagicMirror eerst."
-  exit 1
+echo "Smart Mirror installeren op deze Raspberry Pi."
+read -r -s -p "Google Agenda iCal-link (Enter = later invullen): " CALENDAR_URL
+printf '\n'
+read -r -s -p "NS API-sleutel (Enter = later invullen): " NS_API_KEY
+printf '\n'
+
+if ! command -v git >/dev/null || ! command -v curl >/dev/null || ! command -v xz >/dev/null; then
+	command -v sudo >/dev/null || { echo "sudo ontbreekt."; exit 1; }
+	sudo apt-get update
+	sudo apt-get install -y git curl xz-utils ca-certificates
 fi
 
-mkdir -p "$MODULES_DIR"
+case "$(dpkg --print-architecture)" in
+	arm64) NODE_ARCH="arm64" ;;
+	armhf) NODE_ARCH="armv7l" ;;
+	*) echo "Deze installer ondersteunt Raspberry Pi arm64 en armhf."; exit 1 ;;
+esac
 
-if [ ! -d "$MODULES_DIR/MMM-bustimes/.git" ]; then
-  git clone https://github.com/73cirdan/MMM-bustimes.git "$MODULES_DIR/MMM-bustimes"
-fi
-if [ -f "$MODULES_DIR/MMM-bustimes/package.json" ]; then
-  (cd "$MODULES_DIR/MMM-bustimes" && npm install)
-fi
-
-if [ ! -d "$MODULES_DIR/nstreinen/.git" ]; then
-  git clone https://github.com/qistoph/MMM-nstreinen.git "$MODULES_DIR/nstreinen"
-fi
-if [ -f "$MODULES_DIR/nstreinen/package.json" ]; then
-  (cd "$MODULES_DIR/nstreinen" && npm install)
-fi
-
-if [ -f "$MIRROR_DIR/config/config.js" ]; then
-  cp "$MIRROR_DIR/config/config.js" "$MIRROR_DIR/config/config.js.backup"
+if [[ ! -x "${NODE_ROOT}/bin/node" ]]; then
+	NODE_ARCHIVE="node-${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"
+	NODE_URL="https://nodejs.org/dist/${NODE_VERSION}"
+	curl -fsSL "${NODE_URL}/${NODE_ARCHIVE}" -o "/tmp/${NODE_ARCHIVE}"
+	curl -fsSL "${NODE_URL}/SHASUMS256.txt" -o "/tmp/node-${NODE_VERSION}-SHASUMS256.txt"
+	grep -E " ${NODE_ARCHIVE}$" "/tmp/node-${NODE_VERSION}-SHASUMS256.txt" | (cd /tmp && sha256sum -c -)
+	sudo mkdir -p "${NODE_ROOT}"
+	sudo tar -xJf "/tmp/${NODE_ARCHIVE}" -C "${NODE_ROOT}" --strip-components=1
 fi
 
-curl -fsSL "$CONFIG_URL" -o "$MIRROR_DIR/config/config.js"
-cd "$MIRROR_DIR"
-node --check config/config.js
-echo "Configuratie geplaatst. MagicMirror start nu."
-npm start
+PROFILE_LINE="export PATH=${NODE_ROOT}/bin:\$PATH"
+touch "$HOME/.profile"
+grep -qxF "$PROFILE_LINE" "$HOME/.profile" || printf '%s\n' "$PROFILE_LINE" >> "$HOME/.profile"
+export PATH="${NODE_ROOT}/bin:${PATH}"
+hash -r
+echo "Node.js $(node --version) is klaar."
+
+if [[ ! -f "${MIRROR_DIR}/package.json" ]]; then
+	if [[ -e "${MIRROR_DIR}" ]]; then
+		echo "${MIRROR_DIR} bestaat al, maar bevat geen MagicMirror-installatie. Ik overschrijf die map niet."
+		exit 1
+	fi
+	git clone --depth 1 https://github.com/MagicMirrorOrg/MagicMirror.git "${MIRROR_DIR}"
+fi
+
+cd "${MIRROR_DIR}"
+node --run install-mm
+
+mkdir -p "${MIRROR_DIR}/modules"
+if [[ ! -d "${MIRROR_DIR}/modules/MMM-bustimes" ]]; then
+	git clone --depth 1 https://github.com/73cirdan/MMM-bustimes.git "${MIRROR_DIR}/modules/MMM-bustimes"
+fi
+(cd "${MIRROR_DIR}/modules/MMM-bustimes" && npm install --no-audit --no-fund)
+
+NS_MODULE_DIR="${MIRROR_DIR}/modules/MMM-nsdepartures"
+mkdir -p "${NS_MODULE_DIR}"
+for FILE in MMM-nsdepartures.js node_helper.js MMM-nsdepartures.css; do
+	curl -fsSL "${REPO_RAW}/modules/MMM-nsdepartures/${FILE}" -o "${NS_MODULE_DIR}/${FILE}"
+done
+
+mkdir -p "${MIRROR_DIR}/config"
+if [[ -f "${MIRROR_DIR}/config/config.js" ]]; then
+	BACKUP="${MIRROR_DIR}/config/config.js.backup.$(date +%Y%m%d-%H%M%S)"
+	cp "${MIRROR_DIR}/config/config.js" "${BACKUP}"
+	printf 'Reservekopie gemaakt: %s\n' "${BACKUP}"
+fi
+curl -fsSL "${REPO_RAW}/config.js" -o "${MIRROR_DIR}/config/config.js"
+curl -fsSL "${REPO_RAW}/custom.css" -o "${MIRROR_DIR}/config/custom.css"
+
+CALENDAR_URL="${CALENDAR_URL}" NS_API_KEY="${NS_API_KEY}" node - "${MIRROR_DIR}/config/config.js" <<'NODE'
+const fs = require("node:fs");
+const file = process.argv[2];
+let config = fs.readFileSync(file, "utf8");
+const calendarUrl = process.env.CALENDAR_URL || "";
+const apiKey = process.env.NS_API_KEY || "";
+if (calendarUrl) config = config.replace("VUL_HIER_DE_AGENDA_ICAL_LINK_IN", JSON.stringify(calendarUrl));
+if (apiKey) config = config.replace("VUL_HIER_DE_NS_API_SLEUTEL_IN", JSON.stringify(apiKey));
+fs.writeFileSync(file, config);
+NODE
+
+node --check "${MIRROR_DIR}/config/config.js"
+echo "Installatie klaar. MagicMirror start nu."
+exec node --run start
+
