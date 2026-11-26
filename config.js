@@ -75,7 +75,7 @@ if (!NS_API_KEY.startsWith("VUL")) {
 		header: "Treinen vanaf Gouda",
 		config: {
 			apiKey: NS_API_KEY,
-			fromStation: "GD",
+			fromStation: "Gd",
 			maxEntries: 3,
 			reloadInterval: 300000
 		}
